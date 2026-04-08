@@ -1,0 +1,5 @@
+node_modules/
+*.bmp
+converted_images/
+preview_*.png
+fox_logo.png
