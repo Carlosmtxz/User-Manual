@@ -2,7 +2,8 @@ const {
   Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
   Header, Footer, AlignmentType, HeadingLevel, BorderStyle, WidthType,
   ShadingType, VerticalAlign, PageNumber, PageBreak, TableOfContents,
-  LevelFormat, ImageRun, TabStopType, LeaderType
+  LevelFormat, ImageRun, TabStopType, LeaderType,
+  Bookmark, InternalHyperlink
 } = require('/usr/local/lib/node_modules_global/lib/node_modules/docx');
 const fs = require('fs');
 
@@ -57,22 +58,30 @@ const normalText = (text, size = 22, color = "000000") =>
 const placeholderRun = (text, size = 22) =>
   new TextRun({ text, size, font: "Arial", color: "7F7F7F", italics: true });
 
-const sectionHeading = (text) =>
-  new Paragraph({
+const sectionHeading = (text, bookmarkId) => {
+  const run = new TextRun({ text, bold: true, size: 32, font: "Arial", color: WHITE });
+  return new Paragraph({
     heading: HeadingLevel.HEADING_1,
-    children: [new TextRun({ text, bold: true, size: 32, font: "Arial", color: WHITE })],
+    children: bookmarkId
+      ? [new Bookmark({ id: bookmarkId, children: [run] })]
+      : [run],
     shading: { fill: DARK_BLUE, type: ShadingType.CLEAR },
     spacing: { before: 400, after: 200 },
     indent: { left: 180 },
   });
+};
 
-const subHeading = (text) =>
-  new Paragraph({
+const subHeading = (text, bookmarkId) => {
+  const run = new TextRun({ text, bold: true, size: 26, font: "Arial", color: DARK_BLUE });
+  return new Paragraph({
     heading: HeadingLevel.HEADING_2,
-    children: [new TextRun({ text, bold: true, size: 26, font: "Arial", color: DARK_BLUE })],
+    children: bookmarkId
+      ? [new Bookmark({ id: bookmarkId, children: [run] })]
+      : [run],
     spacing: { before: 280, after: 120 },
     border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: MID_BLUE, space: 2 } },
   });
+};
 
 const bodyPara = (text, placeholder = false) =>
   new Paragraph({
@@ -313,90 +322,96 @@ const revisionHistory = [
 ];
 
 // ─── Table of Contents ────────────────────────────────────────────────────────
-const tocRow = (label, pg, indent = false) =>
-  new Paragraph({
+const tocRow = (label, pg, indent = false, anchor = null) => {
+  const textColor  = indent ? "444444" : DARK_BLUE;
+  const fontSize   = indent ? 20 : 22;
+  const isBold     = !indent;
+  const labelRun   = new TextRun({ text: label,       font: "Arial", size: fontSize, bold: isBold, color: textColor });
+  const pageRun    = new TextRun({ text: "\t" + pg,   font: "Arial", size: fontSize, bold: isBold, color: textColor });
+  const children   = anchor
+    ? [new InternalHyperlink({ anchor, children: [labelRun] }), pageRun]
+    : [labelRun, pageRun];
+  return new Paragraph({
     tabStops: [{ type: TabStopType.RIGHT, position: 9360, leader: LeaderType.DOT }],
     spacing: { before: indent ? 60 : 140, after: 0 },
     indent: indent ? { left: 480 } : {},
-    children: [
-      new TextRun({ text: label, font: "Arial", size: indent ? 20 : 22, bold: !indent, color: indent ? "444444" : DARK_BLUE }),
-      new TextRun({ text: "\t" + pg, font: "Arial", size: indent ? 20 : 22, bold: !indent, color: indent ? "444444" : DARK_BLUE }),
-    ],
+    children,
   });
+};
 
 const tocSection = [
   sectionHeading("Table of Contents"),
   spacer(100),
-  tocRow("1. Introduction", "4"),
-  tocRow("1.1 Purpose of This Manual", "4", true),
-  tocRow("1.2 Machine Overview", "4", true),
-  tocRow("1.3 Intended Users", "4", true),
-  tocRow("1.4 Technical Specifications", "4", true),
+  tocRow("1. Introduction",                              "4",  false, "s1"),
+  tocRow("1.1 Purpose of This Manual",                   "4",  true,  "s1-1"),
+  tocRow("1.2 Machine Overview",                         "4",  true,  "s1-2"),
+  tocRow("1.3 Intended Users",                           "4",  true,  "s1-3"),
+  tocRow("1.4 Technical Specifications",                 "4",  true,  "s1-4"),
   spacer(60),
-  tocRow("2. Safety Overview", "6"),
+  tocRow("2. Safety Overview",                           "6",  false, "s2"),
   spacer(60),
-  tocRow("3. Operating Instructions", "7"),
-  tocRow("3.1 Pre-Operation Checklist", "7", true),
-  tocRow("3.2 Starting the Machine", "7", true),
-  tocRow("3.3 During Normal Operation", "8", true),
-  tocRow("3.4 Stopping the Machine", "8", true),
-  tocRow("3.5 Emergency Stop Procedure", "9", true),
+  tocRow("3. Operating Instructions",                    "7",  false, "s3"),
+  tocRow("3.1 Pre-Operation Checklist",                  "7",  true,  "s3-1"),
+  tocRow("3.2 Starting the Machine",                     "7",  true,  "s3-2"),
+  tocRow("3.3 During Normal Operation",                  "8",  true,  "s3-3"),
+  tocRow("3.4 Stopping the Machine",                     "8",  true,  "s3-4"),
+  tocRow("3.5 Emergency Stop Procedure",                 "9",  true,  "s3-5"),
   spacer(60),
-  tocRow("4. HMI Screen Reference", "10"),
-  tocRow("4.1 Main Screen", "10", true),
-  tocRow("4.2 Setup Menu – Page 1", "11", true),
-  tocRow("4.3 Setup Menu – Page 2", "12", true),
-  tocRow("4.4 I/O Control Panel – Inputs (Page 1)", "13", true),
-  tocRow("4.5 I/O Control Panel – Inputs (Page 2)", "14", true),
-  tocRow("4.6 I/O Control Panel – Outputs (Page 1)", "15", true),
-  tocRow("4.7 I/O Pneumatic Panel – Outputs (Page 2)", "16", true),
-  tocRow("4.8 I/O Pneumatic Panel – Outputs (Page 3)", "17", true),
-  tocRow("4.9 Test Parts Screen", "18", true),
-  tocRow("4.10 Cleanup Screen", "20", true),
-  tocRow("4.11 Options Menu", "20", true),
-  tocRow("4.12 Drive Parameters – WB1 Flat Belt", "25", true),
-  tocRow("4.13 Drive Parameters – WB1 V-Drive (Feed Belt)", "26", true),
-  tocRow("4.14 Drive Parameters – WB2 Flat Belt", "26", true),
-  tocRow("4.15 Drive Parameters – WB2 V-Drive (Feed Belt)", "27", true),
-  tocRow("4.16 Parameters Screen", "28", true),
-  tocRow("4.17 Recipes Screen", "30", true),
-  tocRow("4.18 Alarms Screen", "31", true),
+  tocRow("4. HMI Screen Reference",                      "10", false, "s4"),
+  tocRow("4.1 Main Screen",                              "10", true,  "s4-1"),
+  tocRow("4.2 Setup Menu – Page 1",                      "11", true,  "s4-2"),
+  tocRow("4.3 Setup Menu – Page 2",                      "12", true,  "s4-3"),
+  tocRow("4.4 I/O Control Panel – Inputs (Page 1)",      "13", true,  "s4-4"),
+  tocRow("4.5 I/O Control Panel – Inputs (Page 2)",      "14", true,  "s4-5"),
+  tocRow("4.6 I/O Control Panel – Outputs (Page 1)",     "15", true,  "s4-6"),
+  tocRow("4.7 I/O Pneumatic Panel – Outputs (Page 2)",   "16", true,  "s4-7"),
+  tocRow("4.8 I/O Pneumatic Panel – Outputs (Page 3)",   "17", true,  "s4-8"),
+  tocRow("4.9 Test Parts Screen",                        "18", true,  "s4-9"),
+  tocRow("4.10 Cleanup Screen",                          "20", true,  "s4-10"),
+  tocRow("4.11 Options Menu",                            "20", true,  "s4-11"),
+  tocRow("4.12 Drive Parameters – WB1 Flat Belt",        "25", true,  "s4-12"),
+  tocRow("4.13 Drive Parameters – WB1 V-Drive (Feed Belt)", "26", true, "s4-13"),
+  tocRow("4.14 Drive Parameters – WB2 Flat Belt",        "26", true,  "s4-14"),
+  tocRow("4.15 Drive Parameters – WB2 V-Drive (Feed Belt)", "27", true, "s4-15"),
+  tocRow("4.16 Parameters Screen",                       "28", true,  "s4-16"),
+  tocRow("4.17 Recipes Screen",                          "30", true,  "s4-17"),
+  tocRow("4.18 Alarms Screen",                           "31", true,  "s4-18"),
   spacer(60),
-  tocRow("5. Sensor Setup & Configuration", "33"),
-  tocRow("5.1 IFM OGD550 – Overview", "33", true),
-  tocRow("5.2 Wiring Connections", "33", true),
-  tocRow("5.3 Output Mode Configuration", "33", true),
-  tocRow("5.4 Distance Setpoints", "34", true),
-  tocRow("5.5 Verification", "34", true),
-  tocRow("5.6 Installer Notes", "34", true),
-  tocRow("5.7 Pneumatic Sensor Assembly", "35", true),
-  tocRow("5.8 SMC ZSE20B-T – Digital Vacuum Sensor", "36", true),
-  tocRow("5.9 SMC ISE20A-V – Digital Pressure Sensor", "37", true),
+  tocRow("5. Sensor Setup & Configuration",              "33", false, "s5"),
+  tocRow("5.1 IFM OGD550 – Overview",                    "33", true,  "s5-1"),
+  tocRow("5.2 Wiring Connections",                       "33", true,  "s5-2"),
+  tocRow("5.3 Output Mode Configuration",                "33", true,  "s5-3"),
+  tocRow("5.4 Distance Setpoints",                       "34", true,  "s5-4"),
+  tocRow("5.5 Verification",                             "34", true,  "s5-5"),
+  tocRow("5.6 Installer Notes",                          "34", true,  "s5-6"),
+  tocRow("5.7 Pneumatic Sensor Assembly",                "35", true,  "s5-7"),
+  tocRow("5.8 SMC ZSE20B-T – Digital Vacuum Sensor",     "36", true,  "s5-8"),
+  tocRow("5.9 SMC ISE20A-V – Digital Pressure Sensor",   "37", true,  "s5-9"),
   spacer(60),
-  tocRow("6. Common Fault Codes & Troubleshooting", "39"),
+  tocRow("6. Common Fault Codes & Troubleshooting",      "39", false, "s6"),
   spacer(60),
-  tocRow("7. Contact & Technical Support", "40"),
+  tocRow("7. Contact & Technical Support",               "40", false, "s7"),
   new Paragraph({ children: [new PageBreak()] }),
 ];
 
 // ─── 1. Introduction ──────────────────────────────────────────────────────────
 const introSection = [
-  sectionHeading("1. Introduction"),
+  sectionHeading("1. Introduction", "s1"),
   spacer(100),
-  subHeading("1.1 Purpose of This Manual"),
+  subHeading("1.1 Purpose of This Manual", "s1-1"),
   bodyPara("This manual provides comprehensive operating instructions for the [Machine Name], Model [Model Number]. It is intended for use by qualified operators, technicians, and supervisors responsible for the day-to-day operation of the machine. Read all sections thoroughly before operating the equipment.", false),
   spacer(100),
-  subHeading("1.2 Machine Overview"),
+  subHeading("1.2 Machine Overview", "s1-2"),
   bodyPara("The FSDWB4 Dual Wicketed Bagger is an automatic bagging machine designed for high-speed packaging of portioned products. The machine operates two bagging stations (WB1 and WB2), each connected to a single weigher that has multiple outlets. Each station sends a request signal to its corresponding weigher outlet when it is ready for product. Once the weigher delivers the correct portion, the station bags the product, seals the wicketed bag, and drops the finished bag onto an outfeed conveyor belt for downstream handling. For detailed performance specifications, refer to Section 1.4 – Technical Specifications."),
   spacer(100),
-  subHeading("1.3 Intended Users"),
+  subHeading("1.3 Intended Users", "s1-3"),
   bodyPara("This manual is intended for:"),
   bulletPara("Production operators responsible for running the FSDWB4 bagging machine during shifts", "bullets1"),
   bulletPara("Maintenance technicians performing routine upkeep or troubleshooting on the machine", "bullets1"),
   bulletPara("Production supervisors overseeing bagging line operations", "bullets1"),
   bulletPara("Quality assurance personnel monitoring bag weight and seal integrity", "bullets1"),
   spacer(100),
-  subHeading("1.4 Technical Specifications"),
+  subHeading("1.4 Technical Specifications", "s1-4"),
   spacer(80),
   kvTable([
     ["Machine Model:",        "FSDWB4"],
@@ -418,7 +433,7 @@ const introSection = [
 
 // ─── 2. Safety Overview ───────────────────────────────────────────────────────
 const safetyNote = [
-  sectionHeading("2. Safety Overview"),
+  sectionHeading("2. Safety Overview", "s2"),
   spacer(100),
   infoBox("⚠ WARNING:", "Read and understand all safety precautions before operating this machine. Failure to comply may result in serious injury or death.", "FFF3CD"),
   spacer(160),
@@ -437,13 +452,13 @@ const safetyNote = [
 
 // ─── 3. HMI Screen Reference ──────────────────────────────────────────────────
 const hmiSection = [ // eslint-disable-line no-unused-vars
-  sectionHeading("4. HMI Screen Reference"),
+  sectionHeading("4. HMI Screen Reference", "s4"),
   spacer(100),
   bodyPara("This section provides a visual reference for all screens available on the Human-Machine Interface (HMI) touchscreen. Each screen is shown with a description of its purpose and key elements."),
   spacer(160),
 
   // 3.1 Main Screen
-  subHeading("4.1 Main Screen"),
+  subHeading("4.1 Main Screen", "s4-1"),
   bodyPara("The Main Screen is the primary operating interface displayed during normal production. It provides real-time status and control for both bagging stations (WB1 and WB2). From this screen, operators can monitor the bagging cycle, enable or disable individual station subsystems, and start or stop production."),
   spacer(120),
   hmiImage("Main_Page.png", "Main Screen"),
@@ -466,7 +481,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.2 Setup Menu – Page 1
-  subHeading("4.2 Setup Menu – Page 1"),
+  subHeading("4.2 Setup Menu – Page 1", "s4-2"),
   bodyPara("The Setup Menu is accessed by tapping the SETUP tab in the Navigation Bar. Page 1 contains diagnostic tools and system configuration options. Some functions require a technician login to access."),
   spacer(120),
   hmiImage("Setup_Page.png", "Setup Menu Page 1"),
@@ -483,7 +498,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.3 Setup Menu – Page 2
-  subHeading("4.3 Setup Menu – Page 2"),
+  subHeading("4.3 Setup Menu – Page 2", "s4-3"),
   bodyPara("Setup Page 2 provides access to advanced diagnostic and drive configuration tools. These are primarily used by maintenance technicians during commissioning or troubleshooting."),
   spacer(120),
   hmiImage("Setup_Page2.png", "Setup Menu Page 2"),
@@ -494,7 +509,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.4 I/O – Inputs Page 1
-  subHeading("4.4 I/O Control Panel – Inputs (Page 1)"),
+  subHeading("4.4 I/O Control Panel – Inputs (Page 1)", "s4-4"),
   bodyPara("The I/O Control Panel is accessed via Setup Menu → IO. It displays the real-time state of all machine inputs and outputs, allowing technicians to verify wiring, diagnose faults, and confirm signal integrity without requiring a PLC programmer. Inputs Page 1 covers the first set of digital input signals."),
   spacer(120),
   hmiImage("Inputs1_Page.png", "I/O Inputs Page 1"),
@@ -504,7 +519,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.5 I/O – Inputs Page 2
-  subHeading("4.5 I/O Control Panel – Inputs (Page 2)"),
+  subHeading("4.5 I/O Control Panel – Inputs (Page 2)", "s4-5"),
   bodyPara("Inputs Page 2 continues the digital input signal display, covering additional sensors and switches not shown on Page 1."),
   spacer(120),
   hmiImage("Inputs2_Page.png", "I/O Inputs Page 2"),
@@ -514,7 +529,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.6 I/O – Outputs Page 1
-  subHeading("4.6 I/O Control Panel – Outputs (Page 1)"),
+  subHeading("4.6 I/O Control Panel – Outputs (Page 1)", "s4-6"),
   bodyPara("The Outputs pages display the real-time state of all digital output signals, including solenoid valves, motors, and other actuators controlled by the PLC. Page 1 covers the first group of output signals in the I/O Control Panel."),
   spacer(120),
   hmiImage("Outputs1_Page.png", "I/O Outputs Page 1"),
@@ -524,7 +539,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.7 I/O – Outputs Page 2 (Pneumatic Panel)
-  subHeading("4.7 I/O Pneumatic Panel – Outputs (Page 2)"),
+  subHeading("4.7 I/O Pneumatic Panel – Outputs (Page 2)", "s4-7"),
   bodyPara("The Pneumatic Panel Outputs display shows the state of the pneumatic solenoid valves and related output signals. This page is used to verify that pneumatic actuators are being correctly commanded during the bagging cycle."),
   spacer(120),
   hmiImage("Outputs2_Page.png", "I/O Pneumatic Outputs Page 2"),
@@ -532,7 +547,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.8 I/O – Outputs Page 3 (Pneumatic Panel cont'd)
-  subHeading("4.8 I/O Pneumatic Panel – Outputs (Page 3)"),
+  subHeading("4.8 I/O Pneumatic Panel – Outputs (Page 3)", "s4-8"),
   bodyPara("Page 3 of the Pneumatic Panel Outputs continues the display of pneumatic output signals for both WB1 and WB2 stations."),
   spacer(120),
   hmiImage("Outputs3_Page.png", "I/O Pneumatic Outputs Page 3"),
@@ -542,7 +557,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.9 Test Parts Screen
-  subHeading("4.9 Test Parts Screen"),
+  subHeading("4.9 Test Parts Screen", "s4-9"),
   bodyPara("The Test Parts Screen is accessed via Setup Menu → TEST PARTS. It allows technicians to manually activate individual pneumatic cylinders and mechanical components for each bagging station (WB1 and WB2) independently. This screen is used during maintenance, commissioning, and troubleshooting to verify component operation without running a full production cycle."),
   spacer(120),
   hmiImage("TestParts_Page1.png", "Test Parts Screen"),
@@ -559,7 +574,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.10 Cleanup Screen
-  subHeading("4.10 Cleanup Screen"),
+  subHeading("4.10 Cleanup Screen", "s4-10"),
   bodyPara("The Cleanup Screen is accessed via Setup Menu → CLEAN UP. It allows operators to initiate a controlled cleanup or purge cycle to clear remaining product from the machine between production runs or during changeovers. Use this screen at the end of a shift or when switching between products to ensure the machine is cleared before the next run."),
   spacer(120),
   hmiImage("CleanUp_Page.png", "Cleanup Screen"),
@@ -569,7 +584,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.11 Options Menu
-  subHeading("4.11 Options Menu"),
+  subHeading("4.11 Options Menu", "s4-11"),
   bodyPara("The Options Menu is accessed via Setup Menu → OPTIONS (technician login required). It spans multiple pages and provides configuration settings for sensor bypasses, feature toggles, and machine behavior options. Changes here affect how the machine responds to sensor signals and which features are active during production."),
   spacer(80),
   bodyPara("Two symbols may appear alongside option names on this screen:"),
@@ -624,7 +639,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.12 WB1 Flat Belt Drive Parameters
-  subHeading("4.12 Drive Parameters – WB1 Flat Belt"),
+  subHeading("4.12 Drive Parameters – WB1 Flat Belt", "s4-12"),
   bodyPara("The WB1 Flat Belt Drive Parameters screen is accessed via PARAMETERS → Next Page. This screen is displayed automatically when the Flat Belt drive style is configured for WB1. It displays and allows adjustment of the speed and acceleration settings for the WB1 flat belt conveyor motor. A TEST function is available to run the drive briefly for verification."),
   spacer(120),
   hmiImage("WB1_FlatDrive_Parameters.png", "WB1 Flat Belt Drive Parameters"),
@@ -637,7 +652,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.13 WB1 V-Drive Parameters
-  subHeading("4.13 Drive Parameters – WB1 V-Drive (Feed Belt)"),
+  subHeading("4.13 Drive Parameters – WB1 V-Drive (Feed Belt)", "s4-13"),
   bodyPara("The WB1 V-Drive Parameters screen is accessed via PARAMETERS → Next Page. This screen is displayed automatically when the V-Drive style is configured for WB1. It shows the configuration for the WB1 Feed Belt variable speed drives. The feed belt has two speed zones — an outer high-RPM zone and an inner low-RPM zone — each driven independently."),
   spacer(120),
   hmiImage("WB1_VDrive_Parameters.png", "WB1 V-Drive Parameters"),
@@ -650,7 +665,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.14 WB2 Flat Belt Drive Parameters
-  subHeading("4.14 Drive Parameters – WB2 Flat Belt"),
+  subHeading("4.14 Drive Parameters – WB2 Flat Belt", "s4-14"),
   bodyPara("The WB2 Flat Belt Drive Parameters screen is accessed via PARAMETERS → Next Page. This screen is displayed automatically when the Flat Belt drive style is configured for WB2. It displays speed and acceleration settings for the WB2 flat belt conveyor motor, mirroring the WB1 configuration on a separate drive channel."),
   spacer(120),
   hmiImage("WB2_FlatDrive_Parameters.png", "WB2 Flat Belt Drive Parameters"),
@@ -663,7 +678,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.15 WB2 V-Drive Parameters
-  subHeading("4.15 Drive Parameters – WB2 V-Drive (Feed Belt)"),
+  subHeading("4.15 Drive Parameters – WB2 V-Drive (Feed Belt)", "s4-15"),
   bodyPara("The WB2 V-Drive Parameters screen is accessed via PARAMETERS → Next Page. This screen is displayed automatically when the V-Drive style is configured for WB2. Like WB1, the WB2 feed belt has inner and outer speed zones controlled by separate drives (Drive 3 and Drive 4)."),
   spacer(120),
   hmiImage("WB2_VDrive_Parameters.png", "WB2 V-Drive Parameters"),
@@ -676,7 +691,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.16 Parameters Screen
-  subHeading("4.16 Parameters Screen"),
+  subHeading("4.16 Parameters Screen", "s4-16"),
   bodyPara("The Parameters Screen is accessed via the PARAMETERS tab in the Navigation Bar (technician login required). It displays and allows adjustment of timing values for both bagging stations (WB1 and WB2) that govern the product fall and feed cycle. Tapping the Next Page button on this screen provides access to the drive parameters for WB1 and WB2. The screen will automatically navigate to the Flat Belt or V-Drive parameters depending on the drive style configured for each station — no manual selection is required."),
   spacer(120),
   hmiImage("Parameters_Page.png", "Parameters Screen"),
@@ -725,7 +740,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.17 Recipes Screen
-  subHeading("4.17 Recipes Screen"),
+  subHeading("4.17 Recipes Screen", "s4-17"),
   bodyPara("The Recipes Screen is accessed from the RECIPES tab in the Navigation Bar. It allows operators to select the active weight recipe for the current production run. Each recipe corresponds to a product weight range and configures the machine timing and parameters accordingly."),
   spacer(120),
   hmiImage("Recipes_Page.png", "Recipes Screen"),
@@ -745,7 +760,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(200),
 
   // 3.18 Alarms Screen
-  subHeading("4.18 Alarms Screen"),
+  subHeading("4.18 Alarms Screen", "s4-18"),
   bodyPara("The Alarms Screen is accessed from the ALARMS tab in the Navigation Bar. It displays a log of all active and historical alarms, including the alarm number, descriptive message, and activation time. Operators should review this screen when the machine stops unexpectedly or when an alarm indicator is visible."),
   spacer(120),
   hmiImage("Alarms_Page.png", "Alarms Screen"),
@@ -763,12 +778,12 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
 
 // ─── 4. Operating Instructions ────────────────────────────────────────────────
 const operatingSection = [
-  sectionHeading("3. Operating Instructions"),
+  sectionHeading("3. Operating Instructions", "s3"),
   spacer(100),
   infoBox("ℹ BEFORE YOU BEGIN:", "Ensure you have completed the pre-operation checklist in Section 4.1 before starting the machine. Refer to Section 3 for descriptions of all HMI screens referenced below.", LIGHT_BLUE),
   spacer(200),
 
-  subHeading("3.1 Pre-Operation Checklist"),
+  subHeading("3.1 Pre-Operation Checklist", "s3-1"),
   bodyPara("Before each operating session, verify all of the following:"),
   spacer(80),
   ...[
@@ -783,7 +798,7 @@ const operatingSection = [
   ].map(item => bulletPara(item, "bullets10")),
   spacer(200),
 
-  subHeading("3.2 Starting the Machine"),
+  subHeading("3.2 Starting the Machine", "s3-2"),
   bodyPara("Follow the steps below to start the machine safely:"),
   spacer(120),
   stepCard(1, "Power On", "Turn the main power switch to the ON position. The HMI touchscreen will illuminate and load the Main Screen."),
@@ -797,7 +812,7 @@ const operatingSection = [
   stepCard(5, "Start Production", "Press the green START button (top right of Main Screen). Each station will begin its cycle: requesting product from the weigher, receiving the portioned product, bagging and sealing it, then dropping the finished bag onto the outfeed conveyor. Each station is rated for up to 24 bags per minute (48 bags per minute combined across both stations). Monitor the first several cycles to confirm normal operation on both stations."),
   spacer(200),
 
-  subHeading("3.3 During Normal Operation"),
+  subHeading("3.3 During Normal Operation", "s3-3"),
   bodyPara("While the machine is running, monitor the Main Screen continuously for the following:"),
   bulletPara("WEIGHER DUMP OFF buttons — confirm each bagging station is cycling correctly.", "bullets11"),
   bulletPara("Dynamic Text product name — confirm the correct recipe remains active.", "bullets11"),
@@ -807,7 +822,7 @@ const operatingSection = [
   infoBox("ℹ TIP:", "If output quality changes unexpectedly, navigate to PARAMETERS to verify timing values have not been altered.", LIGHT_BLUE),
   spacer(200),
 
-  subHeading("3.4 Stopping the Machine"),
+  subHeading("3.4 Stopping the Machine", "s3-4"),
   bodyPara("At the end of each production run:"),
   numberedPara("Press the STOP / pause control to end the cycle after the current bag is completed.", "numbers1"),
   numberedPara("Allow all moving components to come to a full stop before approaching the machine.", "numbers1"),
@@ -818,7 +833,7 @@ const operatingSection = [
   numberedPara("Complete the operator production log.", "numbers1"),
   spacer(200),
 
-  subHeading("3.5 Emergency Stop Procedure"),
+  subHeading("3.5 Emergency Stop Procedure", "s3-5"),
   infoBox("🛑 EMERGENCY:", "In any emergency, press the physical red E-Stop button on the machine immediately. This cuts power to all motion systems. The ESTOP indicator on the Main Screen will reflect the activated state.", "FDDEDE"),
   spacer(160),
   bodyPara("After activating the ESTOP:"),
@@ -833,18 +848,18 @@ const operatingSection = [
 
 // ─── 5. Sensor Setup ──────────────────────────────────────────────────────────
 const sensorSection = [
-  sectionHeading("5. Sensor Setup & Configuration"),
+  sectionHeading("5. Sensor Setup & Configuration", "s5"),
   spacer(100),
   bodyPara("This section covers the setup and configuration of the sensors installed on the FSDWB4 machine. Each subsection identifies the specific sensor and provides wiring, output configuration, and setpoint instructions. Follow the appropriate subsection for the sensor being configured."),
   spacer(160),
 
-  subHeading("5.1 IFM OGD550 – Overview"),
+  subHeading("5.1 IFM OGD550 – Overview", "s5-1"),
   bodyPara("The IFM OGD550 is an optical distance sensor with two configurable outputs. On this machine, it is configured to detect two distinct distances corresponding to the Jam Sensor and the Bucket Door Sensor. The sensor uses a 4-wire M12 connector."),
   spacer(80),
   infoBox("ℹ NOTE:", "This sensor is factory-configured for the FSDWB4 machine. Do not change the setpoints or output modes unless instructed by Fox Solutions technical support.", LIGHT_BLUE),
   spacer(160),
 
-  subHeading("5.2 Wiring Connections (M12, 4-Wire)"),
+  subHeading("5.2 Wiring Connections (M12, 4-Wire)", "s5-2"),
   bodyPara("Connect the OGD550 using the M12 4-wire connector as follows:"),
   spacer(80),
   new Table({
@@ -886,7 +901,7 @@ const sensorSection = [
   infoBox("ℹ NOTE:", "Refer to the machine's electrical schematics for the actual terminal numbers at the control panel.", LIGHT_BLUE),
   spacer(160),
 
-  subHeading("5.3 Output Mode Configuration"),
+  subHeading("5.3 Output Mode Configuration", "s5-3"),
   bodyPara("Both outputs must be configured in PNP / Normally Open (NO) mode:"),
   spacer(80),
   bulletPara("OUT1 → PNP / NO  (Jam Sensor – Black wire)", "bullets5"),
@@ -895,14 +910,14 @@ const sensorSection = [
   infoBox("⚠ IMPORTANT:", "OUT2 (Bucket Door Sensor) should only be ON when the bucket door is fully closed. If OUT2 is active while the door is open, the sensor alignment must be rechecked.", "FFF3CD"),
   spacer(160),
 
-  subHeading("5.4 Distance Setpoints"),
+  subHeading("5.4 Distance Setpoints", "s5-4"),
   bodyPara("The sensor is pre-configured with two distance setpoints that correspond to the two detection zones:"),
   spacer(80),
   bulletPara("SP1 (Output 1 – Jam Sensor): 360 mm — the Black wire output turns ON when an object is detected at this distance, indicating a potential product jam.", "bullets5"),
   bulletPara("SP2 (Output 2 – Bucket Door): 530 mm — the White wire output turns ON when the bucket door reaches the fully closed position.", "bullets5"),
   spacer(160),
 
-  subHeading("5.5 Verification"),
+  subHeading("5.5 Verification", "s5-5"),
   bodyPara("After wiring and configuring the sensor, verify correct operation using the following checks:"),
   spacer(80),
   bulletPara("At 360 mm: Black wire output (OUT1) = ON → Jam Sensor active.", "bullets5"),
@@ -912,14 +927,14 @@ const sensorSection = [
   bodyPara("You can verify the sensor outputs in real time using the I/O Control Panel on the HMI (see Sections 4.4 through 4.8)."),
   spacer(160),
 
-  subHeading("5.6 Installer Notes"),
+  subHeading("5.6 Installer Notes", "s5-6"),
   bulletPara("Clean the sensor lens before powering up. Dust or debris on the lens can cause false readings or missed detections.", "bullets5"),
   bulletPara("If readings are unstable or inconsistent, check the sensor's physical alignment and ensure there is no excessive ambient light interference in the detection zone.", "bullets5"),
   spacer(200),
   new Paragraph({ children: [new PageBreak()] }),
 
   // ── Pneumatic Sensor Assembly ──────────────────────────────────────────────
-  subHeading("5.7 Pneumatic Sensor Assembly"),
+  subHeading("5.7 Pneumatic Sensor Assembly", "s5-7"),
   bodyPara("The machine includes a stacked pneumatic sensor assembly mounted on a DIN rail bracket. The assembly contains four SMC digital sensors arranged from top to bottom in the following order:"),
   spacer(80),
   bulletPara("Position 1 (Top) – Pressure Sensor for WB1  |  SMC ISE20A-V", "bullets5"),
@@ -944,7 +959,7 @@ const sensorSection = [
   new Paragraph({ children: [new PageBreak()] }),
 
   // ── ZSE20B-T Vacuum Sensor ─────────────────────────────────────────────────
-  subHeading("5.8 SMC ZSE20B-T – Digital Vacuum Sensor (WB1 & WB2)"),
+  subHeading("5.8 SMC ZSE20B-T – Digital Vacuum Sensor (WB1 & WB2)", "s5-8"),
   bodyPara("The SMC ZSE20B-T is a digital vacuum pressure switch used to monitor the vacuum level at WB1 and WB2. It features a 3-color, 3-screen LCD display and a PNP switch output for the configured setpoint."),
   spacer(120),
 
@@ -997,7 +1012,7 @@ const sensorSection = [
   new Paragraph({ children: [new PageBreak()] }),
 
   // ── ISE20A-V Pressure Sensor ───────────────────────────────────────────────
-  subHeading("5.9 SMC ISE20A-V – Digital Pressure Sensor (WB1 & WB2)"),
+  subHeading("5.9 SMC ISE20A-V – Digital Pressure Sensor (WB1 & WB2)", "s5-9"),
   bodyPara("The SMC ISE20A-V is a digital pressure switch used to monitor pneumatic pressure at both bagging stations (WB1 and WB2). Three units are installed on the assembly — one for WB1 and two for WB2. Each features a 3-color, 3-screen LCD display and a PNP switch output for the configured setpoint."),
   spacer(120),
 
@@ -1060,7 +1075,7 @@ const sensorSection = [
 
 // ─── 6. Fault Codes ───────────────────────────────────────────────────────────
 const faultSection = [
-  sectionHeading("6. Common Fault Codes & Troubleshooting"),
+  sectionHeading("6. Common Fault Codes & Troubleshooting", "s6"),
   spacer(100),
   bodyPara("If the machine displays a fault code or the ALARMS indicator illuminates in the Navigation Bar, refer to the table below. Tap ALARMS on the HMI to view active alarm details. For faults not listed here, contact the manufacturer's technical support."),
   spacer(120),
