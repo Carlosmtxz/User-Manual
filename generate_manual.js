@@ -1372,7 +1372,22 @@ const faultSection = [
 const remoteSection = [
   sectionHeading("7. Machine Remote Connection", "s7"),
   spacer(40),
-  bodyPara("The FSDWB4 is equipped with an industrial VPN router that enables secure remote access for diagnostics and technical support by Fox Solutions. The remote connection uses the StrideLinx cloud platform and can be established over Wi-Fi or a wired Ethernet connection."),
+  bodyPara("The FSDWB4 is equipped with an industrial VPN router (StrideLinx modem) mounted inside the control panel that enables secure remote access for diagnostics and technical support by Fox Solutions. The remote connection uses the StrideLinx cloud platform and can be established over Wi-Fi or a wired Ethernet connection."),
+  spacer(40),
+  new Paragraph({
+    alignment: AlignmentType.CENTER,
+    children: [new ImageRun({
+      type: "jpeg",
+      data: fs.readFileSync(`${IMG_DIR}Stridelinx_Modem.jpeg`),
+      transformation: { width: 300, height: 260 },
+      altText: { title: "StrideLinx Modem", description: "StrideLinx VPN Modem with USB Drive", name: "StridelinxModem" },
+    })],
+    spacing: { before: 40, after: 40 },
+  }),
+  new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: "Figure 7.0 – StrideLinx VPN Modem (USB drive shown on top)", italics: true, size: 20, font: "Arial", color: GRAY })], spacing: { before: 0, after: 40 } }),
+  bodyPara("The modem has two indicator lights located above the ports:"),
+  bulletPara("Wi-Fi Indicator (bars icon) — lights up purple when the modem has a good Wi-Fi connection to the customer's network.", "bullets3"),
+  bulletPara("ACT Indicator — lights up purple when the modem is successfully reaching the StrideLinx server.", "bullets3"),
   spacer(40),
 
   subHeading("7.1 Wi-Fi Setup", null, false),
