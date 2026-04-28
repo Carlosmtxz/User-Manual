@@ -16,7 +16,7 @@ const LIGHT_GRAY  = "F2F2F2";
 const WHITE       = "FFFFFF";
 
 // ─── Image helper ─────────────────────────────────────────────────────────────
-const IMG_DIR = "/home/claude/User-Manual/FSDWB4_HMI_ScreenShots/";
+const IMG_DIR = "/home/claude/User-Manual/FSWB4_HMI_Screenshots/";
 const LOGO_PATH    = "/home/claude/User-Manual/logo solutions.png";
 const MACHINE_PATH = "/home/claude/User-Manual/dualwb.jpg";
 // Fit ~820x500 HMI images within 6.5" content width at 96 DPI
@@ -250,7 +250,7 @@ const coverPage = [
         width: { size: 9360, type: WidthType.DXA },
         margins: { top: 200, bottom: 200, left: 300, right: 300 },
         children: [
-          new Paragraph({ alignment: AlignmentType.CENTER, children: [boldText("FSDWB4 – Dual Wicketed Bagger", 32, WHITE)] }),
+          new Paragraph({ alignment: AlignmentType.CENTER, children: [boldText("FSWB4 – Single Wicketed Bagger", 32, WHITE)] }),
           new Paragraph({ alignment: AlignmentType.CENTER, children: [normalText("User Manual", 24, WHITE)] }),
         ],
       })],
@@ -263,7 +263,7 @@ const coverPage = [
       type: "jpg",
       data: fs.readFileSync(MACHINE_PATH),
       transformation: { width: 360, height: 291 },
-      altText: { title: "FSDWB4 Dual Wicketed Bagger", description: "FSDWB4 machine photo", name: "FSDWB4_Machine" },
+      altText: { title: "FSWB4 Single Wicketed Bagger", description: "FSWB4 machine photo", name: "FSWB4_Machine" },
     })],
     spacing: { before: 0, after: 60 },
   }),
@@ -273,8 +273,8 @@ const coverPage = [
     spacing: { after: 400 },
   }),
   kvTable([
-    ["Machine Name:",   "Dual Wicketed Bagger"],
-    ["Model Number:",   "FSDWB4"],
+    ["Machine Name:",   "Single Wicketed Bagger"],
+    ["Model Number:",   "FSWB4"],
     ["Manufacturer:",   "Fox Solutions"],
   ]),
   new Paragraph({ children: [new PageBreak()] }),
@@ -317,7 +317,7 @@ const revisionHistory = [
     ],
   }),
   spacer(40),
-  infoBox("ℹ PROGRAM COMPATIBILITY:", "This manual is intended for use with PLC program version FSDWB-P25B and its corresponding HMI version. Some features described in this document may be available in other program versions but are not guaranteed. If you are unsure which version is installed on your machine, refer to Setup → SYSTEM INFO on the HMI. Contact Fox Solutions technical support for version-specific guidance.", LIGHT_BLUE),
+  infoBox("ℹ PROGRAM COMPATIBILITY:", "This manual is intended for use with PLC program version FSWB-P25B and its corresponding HMI version. Some features described in this document may be available in other program versions but are not guaranteed. If you are unsure which version is installed on your machine, refer to Setup → SYSTEM INFO on the HMI. Contact Fox Solutions technical support for version-specific guidance.", LIGHT_BLUE),
   spacer(40),
   new Paragraph({ children: [new PageBreak()] }),
 ];
@@ -376,9 +376,7 @@ const tocSection = [
   tocRow("4.4.2 Drive Parameters – WB1 Flat Belt",             "40", true,  "s4-12"),
   tocRow("4.4.3 Drive Parameters – WB1 V-Drive (Feed Belt)",   "41", true,  "s4-13"),
   tocRow("4.4.3.1 Pre-Alignment Setup Screen",                 "42", true,  "s4-13"),
-  tocRow("4.4.4 Drive Parameters – WB2 Flat Belt",             "44", true,  "s4-14"),
-  tocRow("4.4.5 Drive Parameters – WB2 V-Drive (Feed Belt)",   "45", true,  "s4-15"),
-  tocRow("4.5 Recipes Screen",                                 "46", true,  "s4-17"),
+  tocRow("4.5 Recipes Screen",                                 "44", true,  "s4-17"),
   tocRow("4.6 Alarms Screen",                                  "47", true,  "s4-18"),
   spacer(40),
   tocRow("5. Sensor Setup & Configuration",                    "48", false, "s5"),
@@ -409,10 +407,10 @@ const introSection = [
   sectionHeading("1. Introduction", "s1"),
   spacer(100),
   subHeading("1.1 Purpose of This Manual", "s1-1"),
-  bodyPara("This manual provides comprehensive operating instructions for the FSDWB4 Dual Wicketed Bagger. It is intended for use by qualified operators, technicians, and supervisors responsible for the day-to-day operation of the machine. Read all sections thoroughly before operating the equipment.", false),
+  bodyPara("This manual provides comprehensive operating instructions for the FSWB4 Single Wicketed Bagger. It is intended for use by qualified operators, technicians, and supervisors responsible for the day-to-day operation of the machine. Read all sections thoroughly before operating the equipment.", false),
   spacer(100),
   subHeading("1.2 Machine Overview", "s1-2"),
-  bodyPara("The FSDWB4 Dual Wicketed Bagger is an automatic bagging machine designed for high-speed packaging of portioned products. The machine operates two bagging stations (WB1 and WB2), each connected to a single weigher that has multiple outlets. Each station sends a request signal to its corresponding weigher outlet when it is ready for product. Once the weigher delivers the correct portion, the station bags the product, seals the wicketed bag, and drops the finished bag onto an outfeed conveyor belt for downstream handling. For detailed performance specifications, refer to Section 1.4 – Technical Specifications."),
+  bodyPara("The FSWB4 Single Wicketed Bagger is an automatic bagging machine designed for high-speed packaging of portioned products. The machine operates a single bagging station (WB1) connected to a weigher outlet. The station sends a request signal to the weigher outlet when it is ready for product. Once the weigher delivers the correct portion, the station bags the product, seals the wicketed bag, and drops the finished bag onto an outfeed conveyor belt for downstream handling. For detailed performance specifications, refer to Section 1.4 – Technical Specifications."),
   spacer(40),
   infoBox("📋 MACHINE DOCUMENTATION:", "A QR code is located on the nameplate on the side of the control panel. Scanning it will give you access to the electrical schematics and user manual specific to your machine.", LIGHT_BLUE),
   spacer(40),
@@ -426,14 +424,14 @@ const introSection = [
   subHeading("1.4 Technical Specifications", "s1-4"),
   spacer(40),
   kvTable([
-    ["Machine Model:",        "FSDWB4"],
-    ["Machine Type:",         "Dual Station Automatic Wicketed Bagger"],
-    ["Number of Stations:",   "2 (WB1 and WB2)"],
-    ["Rated Speed:",          "Up to 24 bags per minute per station (48 bags per minute combined)"],
+    ["Machine Model:",        "FSWB4"],
+    ["Machine Type:",         "Single Station Automatic Wicketed Bagger"],
+    ["Number of Stations:",   "1 (WB1)"],
+    ["Rated Speed:",          "Up to 24 bags per minute"],
     ["Portion Size:",         "1 lb – 10 lb (standard); larger portions available with special attachments — contact Fox Solutions for a custom solution"],
     ["Bag Type:",             "Wicketed bags"],
-    ["Power Supply:",         "240 VAC, 20 A, 60 Hz"],
-    ["Air Consumption:",      "18 CFM @ 90 PSI"],
+    ["Power Supply:",         "240 VAC, 10 A, 60 Hz"],
+    ["Air Consumption:",      "9 CFM @ 90 PSI"],
     ["Operating Temp. Range:","40°F – 100°F (4°C – 38°C)"],
   ]),
   spacer(40),
@@ -466,7 +464,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
 
   // ── 4.1 Main Screen ──────────────────────────────────────────────────────────
   subHeading("4.1 Main Screen", "s4-1"),
-  bodyPara("The Main Screen is the primary operating interface displayed during normal production. It provides real-time status and control for both bagging stations (WB1 and WB2). From this screen, operators can monitor the bagging cycle, enable or disable individual station subsystems, and start or stop production."),
+  bodyPara("The Main Screen is the primary operating interface displayed during normal production. It provides real-time status and control for the bagging station (WB1). From this screen, operators can monitor the bagging cycle, enable or disable individual station subsystems, and start or stop production."),
   spacer(40),
   hmiImage("Main_Page.png", "Main Screen"),
   imgCaption("Figure 4.1a – Main Screen (Normal Operation)"),
@@ -479,14 +477,14 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   bulletPara("WB1 / WB2 Panels: Each bagging station has independent controls including WEIGHER DUMP OFF and TEST DUMP buttons.", "bullets3"),
   bulletPara("KWIKLOK: Enables or disables the Kwiklok bag closure device for the respective bagging station.", "bullets3"),
   bulletPara("ENABLE WB: Activates or deactivates the bagging station from participating in the production cycle.", "bullets3"),
-  bulletPara("AIR SUPPLY: Monitors or controls the pneumatic air supply status for each station.", "bullets3"),
+  bulletPara("AIR SUPPLY: Monitors or controls the pneumatic air supply status for the station.", "bullets3"),
   spacer(40),
-    hmiImage("Main_Page_Estop.png", "Main Screen – E-Stop Activated"),
+    hmiImage("Main_Page_estop.png", "Main Screen – E-Stop Activated"),
   imgCaption("Figure 4.1b – Main Screen (E-Stop Activated)"),
   spacer(40),
   bodyPara("When the physical E-stop is pressed, the ESTOP indicator on the Main Screen changes state to reflect that the machine has been halted. All motion stops immediately. The indicator will return to its normal state once the physical E-stop is released and the machine is reset."),
   spacer(40),
-    hmiImage("Main_Page_ProductNotFound.png", "Main Screen – Product Not Found"),
+    hmiImage("Main_Page_No_Product.png", "Main Screen – Product Not Found"),
   imgCaption("Figure 4.1c – Main Screen (Product Not Found)"),
   spacer(40),
   bodyPara("Triggered when a weigher dump signal is received but no product is detected on the feeding belts by the jam sensor or — where equipped — the V-conveyor or delivery sensors. Must be enabled via ENABLE PRODUCT DETECTION in the Options Menu (Section 4.2.5). When flagged, the affected station halts and presents the operator with two options:"),
@@ -520,41 +518,31 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
 
   // ── 4.2.1 I/O Control Panel ──────────────────────────────────────────────────
   subHeading("4.2.1 I/O Control Panel", "s4-4", true),
-  bodyPara("The I/O Control Panel is accessed via Setup Menu → IO. It displays the real-time state of all machine inputs and outputs, allowing technicians to verify wiring, diagnose faults, and confirm signal integrity without requiring a PLC programmer."),
+  bodyPara("The I/O Control Panel is accessed via Setup Menu → IO. It displays the real-time state of all machine inputs and outputs, allowing technicians to verify wiring, diagnose faults, and confirm signal integrity without requiring a PLC programmer. The FSWB4 has three I/O pages: one for inputs, one for outputs, and one combination page showing both."),
   spacer(40),
-  hmiImage("Inputs1_Page.png", "I/O Inputs Page 1"),
-  imgCaption("Figure 4.2.1a – I/O Control Panel – Inputs, Page 1"),
+  hmiImage("IO_Page1.png", "I/O Control Panel – Inputs"),
+  imgCaption("Figure 4.2.1a – I/O Control Panel – Inputs"),
   spacer(40),
-  bodyPara("Each row shows the signal name alongside a color-coded indicator: green = active (ON), grey = inactive (OFF). Use this screen to verify sensor states and confirm that E-stop, safety, and position switches are functioning correctly before starting production."),
+  bodyPara("The Inputs page shows all digital input signals. Each row displays the signal name alongside a color-coded indicator: green = active (ON), grey = inactive (OFF). Use this screen to verify sensor states and confirm that E-stop, safety, and position switches are functioning correctly before starting production."),
   spacer(40),
-    hmiImage("Inputs2_Page.png", "I/O Inputs Page 2"),
-  imgCaption("Figure 4.2.1b – I/O Control Panel – Inputs, Page 2"),
+  hmiImage("IO_Page2.png", "I/O Control Panel – Outputs"),
+  imgCaption("Figure 4.2.1b – I/O Control Panel – Outputs"),
   spacer(40),
-  bodyPara("Inputs Page 2 continues the digital input signal display, covering additional sensors and switches. Review both input pages when troubleshooting unexpected machine behavior or verifying that all safety interlocks are responding correctly."),
+  bodyPara("The Outputs page displays the real-time state of all digital output signals, including solenoid valves, motors, and other actuators controlled by the PLC. Use this screen to confirm whether the PLC is commanding a device to activate — helps isolate faults in control logic versus physical wiring."),
   spacer(40),
-    hmiImage("Outputs1_Page.png", "I/O Outputs Page 1"),
-  imgCaption("Figure 4.2.1c – I/O Control Panel – Outputs, Page 1"),
+  hmiImage("IO_Page3.png", "I/O Control Panel – Combo Page"),
+  imgCaption("Figure 4.2.1c – I/O Control Panel – Inputs & Outputs (Combo)"),
   spacer(40),
-  bodyPara("The Outputs pages display the real-time state of all digital output signals, including solenoid valves, motors, and other actuators controlled by the PLC. Use this screen to confirm whether the PLC is commanding a device to activate — helps isolate faults in control logic versus physical wiring."),
-  spacer(40),
-    hmiImage("Outputs2_Page.png", "I/O Pneumatic Outputs Page 2"),
-  imgCaption("Figure 4.2.1d – I/O Pneumatic Panel – Outputs, Page 2"),
-  spacer(40),
-  bodyPara("The Pneumatic Panel Outputs display shows the state of pneumatic solenoid valves and related output signals. Use this page to verify that pneumatic actuators are being correctly commanded during the bagging cycle."),
-  spacer(40),
-    hmiImage("Outputs3_Page.png", "I/O Pneumatic Outputs Page 3"),
-  imgCaption("Figure 4.2.1e – I/O Pneumatic Panel – Outputs, Page 3"),
-  spacer(40),
-  bodyPara("Page 3 continues the pneumatic output signals display for both WB1 and WB2 stations."),
+  bodyPara("The Combo page displays both input and output signals on a single screen, providing a quick overview of the machine's full I/O state. Useful during commissioning or troubleshooting when you need to monitor inputs and outputs simultaneously."),
   spacer(40),
   infoBox("ℹ NOTE:", "Output forcing (manually commanding an output from the HMI) may be available in certain modes. Only qualified technicians should use this function. Forcing outputs with the machine running can cause unexpected motion.", LIGHT_BLUE),
   spacer(40),
 
   // ── 4.2.2 Test Parts Screen ───────────────────────────────────────────────────
   subHeading("4.2.2 Test Parts Screen", "s4-9", true),
-  bodyPara("The Test Parts Screen is accessed via Setup Menu → TEST PARTS. It allows technicians to manually activate individual pneumatic cylinders and mechanical components for each bagging station (WB1 and WB2) independently. Used during maintenance, commissioning, and troubleshooting to verify component operation without running a full production cycle."),
+  bodyPara("The Test Parts Screen is accessed via Setup Menu → TEST PARTS. It allows technicians to manually activate individual pneumatic cylinders and mechanical components for the bagging station (WB1) independently. Used during maintenance, commissioning, and troubleshooting to verify component operation without running a full production cycle."),
   spacer(40),
-  hmiImage("TestParts_Page1.png", "Test Parts Screen"),
+  hmiImage("Test_Parts_Page1.png", "Test Parts Screen"),
   imgCaption("Figure 4.2.2 – Test Parts Screen"),
   spacer(40),
   bodyPara("Each output on this screen can be triggered using one of two modes:"),
@@ -571,7 +559,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   subHeading("4.2.3 Cleanup Screen", "s4-10", true),
   bodyPara("The Cleanup Screen is accessed via Setup Menu → CLEAN UP. It allows operators to initiate a controlled cleanup or purge cycle to clear remaining product from the machine between production runs or during changeovers. Use this screen at the end of a shift or when switching between products."),
   spacer(40),
-  hmiImage("CleanUp_Page.png", "Cleanup Screen"),
+  hmiImage("Cleanup_Page.png", "Cleanup Screen"),
   imgCaption("Figure 4.2.3 – Cleanup Screen"),
   spacer(40),
   infoBox("ℹ NOTE:", "Always follow your facility's sanitation procedures after completing the cleanup cycle. The Cleanup Screen clears product from the machine path but does not replace a full sanitation wash-down where required.", LIGHT_BLUE),
@@ -583,9 +571,9 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(40),
   bodyPara("Two symbols may appear alongside option names on this screen:"),
   bulletPara("Recipe Icon (folder symbol, shown to the left of the option name): The option value is saved per recipe. Turning it on or off applies only to the currently active recipe — different recipes can have different settings for this option.", "bullets3"),
-  bulletPara("Chain Link Icon (shown between the WB1 and WB2 toggles): The option is shared between both bagging stations. Changing the setting on one station automatically applies the same value to the other.", "bullets3"),
+  bulletPara("Chain Link Icon (shown between the WB1 toggles): The option is shared between both bagging stations. Changing the setting on one station automatically applies the same value to the other.", "bullets3"),
   spacer(40),
-  hmiImage("Options_1.png", "Options Menu Page 1"),
+  hmiImage("Options_Page1.png", "Options Menu Page 1"),
   imgCaption("Figure 4.2.4a – Options Menu, Page 1"),
   spacer(40),
   optionsTable([
@@ -595,7 +583,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
     ["ENABLE LOAD BAGS BUTTON", "Activates a dedicated LOAD BAGS button on the Main Screen for the selected station. This allows operators to manually advance the bag wicket during setup or when reloading bags mid-production without starting a full cycle.", null],
   ]),
   spacer(40),
-    hmiImage("Options_2.png", "Options Menu Page 2"),
+    hmiImage("Options_Page2.png", "Options Menu Page 2"),
   imgCaption("Figure 4.2.4b – Options Menu, Page 2"),
   spacer(40),
   optionsTable([
@@ -605,27 +593,27 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
     ["ENABLE BAG DROP CONTROL", "Enables the bag drop control feature per station. This option is used to prevent the machine from dropping a finished bag on top of a previously dropped bag still on the takeaway conveyor. When ON, the machine waits for confirmation that the conveyor is clear before releasing the next bag. This option should be paired with a photo eye sensor mounted on the takeaway conveyor to detect when the previous bag has cleared.", null],
   ]),
   spacer(40),
-    hmiImage("Options_3.png", "Options Menu Page 3"),
+    hmiImage("Options_Page3.png", "Options Menu Page 3"),
   imgCaption("Figure 4.2.4c – Options Menu, Page 3"),
   spacer(40),
   optionsTable([
     ["KWIKLOK BELTS TIMEOUT", "When enabled, the bagger will automatically stop the Kwiklok belt if no bag has passed through it within a set period of time. This prevents the Kwiklok from running continuously when no product is present, reducing wear and alerting the operator to a potential feeding issue.", null],
-    ["LARGE VOLUME", "Activates large volume mode for the bagging cycle. When enabled, the machine runs the feeding belts before requesting product from the weigher. This pre-motion helps streamline larger portions of product through the bagger and into the bag more smoothly, reducing jams and improving fill consistency for high-volume portions. Recipe-dependent — can be set differently per recipe. Linked — the same setting applies to both WB1 and WB2.", "Recipe | Linked"],
-    ["ENABLE EXTERNAL HALT SIGNAL INPUT 15", "Enables the external halt signal on digital input 15. When ON, the machine will stop its cycle when this input receives a signal from an external device (e.g., a downstream conveyor or checkweigher). Linked — applies to both stations simultaneously.", "Linked"],
+    ["LARGE VOLUME", "Activates large volume mode for the bagging cycle. When enabled, the machine runs the feeding belts before requesting product from the weigher. This pre-motion helps streamline larger portions of product through the bagger and into the bag more smoothly, reducing jams and improving fill consistency for high-volume portions. Recipe-dependent — can be set differently per recipe. Linked — the same setting applies to both WB1.", "Recipe | Linked"],
+    ["ENABLE EXTERNAL HALT SIGNAL INPUT 15", "Enables the external halt signal on digital input 15. When ON, the machine will stop its cycle when this input receives a signal from an external device (e.g., a downstream conveyor or checkweigher). Linked — applies to the station simultaneously.", "Linked"],
     ["RUN FEED BELTS BEFORE FINGER GRABS BAG", "When ON, the feed belts start running as soon as the bag opens, without waiting for the gripping finger to close and secure the bag. This reduces idle time and can increase machine throughput. However, if the bag is not seated tightly around the bucket, product falling into an unsecured bag may cause it to shift — potentially resulting in a spill or the finger failing to get a proper grip on the bag. Use this option only when bag presentation is consistent and reliable.", null],
   ]),
   spacer(40),
-    hmiImage("Options_4.png", "Options Menu Page 4"),
+    hmiImage("Options_Page4.png", "Options Menu Page 4"),
   imgCaption("Figure 4.2.4d – Options Menu, Page 4"),
   spacer(40),
   optionsTable([
-    ["PRE ALIGNMENT", "Activates the pre-alignment feature for V-Drive configurations only. When a portion is detected and present, the feed belts run briefly to align the product before it is fed into the bag. This creates a smoother, more controlled transition into the bagging cycle and reduces the risk of product arriving out of position. Additional pre-alignment timing settings can be found on the V-Drive Parameters page. Recipe-dependent — can be toggled per recipe. Linked — the same setting applies to both WB1 and WB2.", "Recipe | Linked"],
+    ["PRE ALIGNMENT", "Activates the pre-alignment feature for V-Drive configurations only. When a portion is detected and present, the feed belts run briefly to align the product before it is fed into the bag. This creates a smoother, more controlled transition into the bagging cycle and reduces the risk of product arriving out of position. Additional pre-alignment timing settings can be found on the V-Drive Parameters page. Recipe-dependent — can be toggled per recipe. Linked — the same setting applies to both WB1.", "Recipe | Linked"],
     ["BYPASS DELIVERY SENSOR", "Disables the delivery sensor that confirms product has cleared the feeding belts and entered the bucket. This bypass may be useful when handling products with excessive residual husks or debris that can trigger false jam alarms or cause delays. Use with caution — bypassing this sensor reduces the machine's ability to detect real jams.", null],
     ["LABEL DISPENSER", "Enables the label dispenser accessory. Only enable when the machine is equipped with this option. When ON, the machine drops a label or card into the bag from the top of the bucket at the appropriate point in the cycle. Recipe-dependent — can be enabled or disabled per recipe.", "Recipe"],
-    ["KWIKLOK \"A\" MACHINE", "Configures the station to operate with a Kwiklok \"A\" style closure machine. Baggers are typically equipped with the newer \"B\" model — when using an \"A\" machine, the bagger cannot send a run signal as the A-model is not equipped to receive it. Additionally, instead of wiring the fault signal from a B machine, an external lock sensor must be installed into the Kwiklok fault input. Refer to the electrical schematics for wiring details. Linked — applies to both stations simultaneously.", "Linked"],
+    ["KWIKLOK \"A\" MACHINE", "Configures the station to operate with a Kwiklok \"A\" style closure machine. Baggers are typically equipped with the newer \"B\" model — when using an \"A\" machine, the bagger cannot send a run signal as the A-model is not equipped to receive it. Additionally, instead of wiring the fault signal from a B machine, an external lock sensor must be installed into the Kwiklok fault input. Refer to the electrical schematics for wiring details. Linked — applies to the station simultaneously.", "Linked"],
   ]),
   spacer(40),
-    hmiImage("Options_5.png", "Options Menu Page 5"),
+    hmiImage("Options_Page5.png", "Options Menu Page 5"),
   imgCaption("Figure 4.2.4e – Options Menu, Page 5"),
   spacer(40),
   optionsTable([
@@ -671,8 +659,8 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   spacer(40),
   bodyPara("The production counters are split into two categories:"),
   bulletPara("Current – Tracks bags completed since the machine was last powered on. Resets automatically on every power cycle.", "bullets3"),
-  bulletPara("Permanent – Retains the total bag count across power cycles, providing a running lifetime total for each station.", "bullets3"),
-  bulletPara("Total (bottom) – Displays the combined permanent count for both WB1 and WB2 stations.", "bullets3"),
+  bulletPara("Permanent – Retains the total bag count across power cycles, providing a running lifetime total for the station.", "bullets3"),
+  bulletPara("Total (bottom) – Displays the combined permanent count for both WB1 station.", "bullets3"),
   spacer(40),
   infoBox("ℹ NOTE:", "A RESET button will appear next to the Current counter when a technician security level is active. This allows the current count to be manually reset without affecting the permanent counter.", LIGHT_BLUE),
   spacer(40),
@@ -696,7 +684,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   hmiImage("Sync_Test_Page.png", "Sync Test Screen"),
   imgCaption("Figure 4.3.1 – Sync Test Screen"),
   spacer(40),
-  bodyPara("Each station (WB1 and WB2) can be tested independently. The screen displays the current state of the request and dump signals in real time, allowing the technician to confirm that the weigher is receiving the request and responding with a valid dump signal. If the handshake fails or signals are not toggling as expected, check the weigher communication wiring and confirm the correct outlet is mapped to each station."),
+  bodyPara("Each station (WB1) can be tested independently. The screen displays the current state of the request and dump signals in real time, allowing the technician to confirm that the weigher is receiving the request and responding with a valid dump signal. If the handshake fails or signals are not toggling as expected, check the weigher communication wiring and confirm the correct outlet is mapped to the station."),
   spacer(40),
 
   // ── 4.3.2 Drive Status Screen ────────────────────────────────────────────────
@@ -711,9 +699,9 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
 
   // ── 4.4 Parameters Screen ────────────────────────────────────────────────────
   subHeading("4.4 Parameters Screen", "s4-16", true),
-  bodyPara("The Parameters Screen is accessed via the PARAMETERS tab in the Navigation Bar (technician login required). It displays and allows adjustment of timing values for both bagging stations (WB1 and WB2) that govern the product fall and feed cycle. When the COLLECTOR option is enabled, additional collector timing parameters appear on the screen. Tapping the Next Page button provides access to the drive parameters for WB1 and WB2, navigating automatically to Flat Belt or V-Drive screens depending on the drive style configured — no manual selection is required."),
+  bodyPara("The Parameters Screen is accessed via the PARAMETERS tab in the Navigation Bar (technician login required). It displays and allows adjustment of timing values for the bagging station (WB1) that govern the product fall and feed cycle. When the COLLECTOR option is enabled, additional collector timing parameters appear on the screen. Tapping the Next Page button provides access to the drive parameters for WB1, navigating automatically to Flat Belt or V-Drive screens depending on the drive style configured — no manual selection is required."),
   spacer(40),
-  hmiImage("Parameters_Page1B.png", "Parameters Screen"),
+  hmiImage("Parameters_1B.png", "Parameters Screen"),
   imgCaption("Figure 4.4 – Parameters Screen"),
   spacer(40),
   new Table({
@@ -760,7 +748,7 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   subHeading("4.4.1 Hidden Timers Screen", null, true),
   bodyPara("The Hidden Timers Screen is accessed by pressing a hidden button in the bottom-right corner of the Parameters Screen. It contains core machine timing values that affect fundamental cycle behavior. These timers are factory-configured and do not require adjustment under normal operating conditions."),
   spacer(40),
-  hmiImage("Hidden_Timers_Page.png", "Hidden Timers Screen"),
+  hmiImage("Hidden_Parameters.png", "Hidden Timers Screen"),
   imgCaption("Figure 4.4.2 – Hidden Timers Screen"),
   spacer(40),
   infoBox("⚠ WARNING:", "Do not modify any values on this screen without direct guidance from Fox Solutions technical support. Incorrect timer values can cause unpredictable machine behavior, missed cycles, or mechanical damage.", "FFF3CD"),
@@ -806,30 +794,6 @@ const hmiSection = [ // eslint-disable-line no-unused-vars
   bulletPara("Speed (Hz) and Accel (s) – These settings control belt speed and ramp-up time during the pre-alignment cycle only. They are independent from the normal production belt speeds configured on the V-Drive Parameters page and do not affect feeding speed during the bagging cycle.", "bullets8"),
   spacer(40),
   infoBox("ℹ NOTE:", "More pre-alignment cycles improve product positioning but reduce machine output. Tune the number of cycles and timers to find the best balance between alignment quality and throughput for your product.", LIGHT_BLUE),
-  spacer(40),
-
-  subHeading("4.4.4 Drive Parameters – WB2 Flat Belt", null, true),
-  bodyPara("Displayed automatically via PARAMETERS → Next Page when the Flat Belt drive style is configured for WB2. Mirrors the WB1 configuration on a separate drive channel."),
-  spacer(40),
-  hmiImage("WB2_FlatDrive_Parameters.png", "WB2 Flat Belt Drive Parameters"),
-  imgCaption("Figure 4.4.5 – WB2 Flat Belt Drive Parameters"),
-  spacer(40),
-  bulletPara("SPEED (Hz) – Operating frequency of the WB2 flat belt drive.", "bullets9"),
-  bulletPara("ACCEL (s) – Motor ramp-up time for the WB2 flat belt.", "bullets9"),
-  bulletPara("DRIVE 4 STATUS – Health indicator for Drive 4 (WB2 flat belt).", "bullets9"),
-  bulletPara("TEST Button – Activates the WB2 flat belt briefly for testing.", "bullets9"),
-  spacer(40),
-
-  subHeading("4.4.5 Drive Parameters – WB2 V-Drive (Feed Belt)", null, true),
-  bodyPara("Displayed automatically via PARAMETERS → Next Page when the V-Drive style is configured for WB2. Like WB1, the WB2 feed belt has inner and outer speed zones controlled by separate drives (Drive 3 and Drive 4). The Pre-Alignment icon also appears on this screen when the PRE ALIGNMENT option is enabled — see Section 4.4.3.1 for setup details."),
-  spacer(40),
-  hmiImage("WB2_VDrive_Parameters.png", "WB2 V-Drive Parameters"),
-  imgCaption("Figure 4.4.6 – WB2 V-Drive Parameters (Feed Belt Inner / Outer)"),
-  spacer(40),
-  bulletPara("FEED BELT INNER – LOW RPM: Controls the inner section of the WB2 feed belt at low speed. Drive 3 status shown.", "bullets9"),
-  bulletPara("FEED BELT OUTER – HIGH RPM: Controls the outer section of the WB2 feed belt at high speed. Drive 4 status shown.", "bullets9"),
-  bulletPara("SPEED (Hz) and ACCEL (s): Independently configurable for each belt zone.", "bullets9"),
-  bulletPara("TEST Button: Runs each zone separately for commissioning verification.", "bullets9"),
   spacer(40),
 
   subHeading("4.5 Recipes Screen", "s4-17", true),
@@ -900,7 +864,7 @@ const operatingSection = [
   spacer(40),
   stepCard(4, "Enable Bagging Stations", "On the Main Screen, toggle ENABLE WB and AIR SUPPLY to ON for WB1 and/or WB2. Each active station will begin sending REQUEST signals to its weigher outlet once production starts."),
   spacer(40),
-  stepCard(5, "Start Production", "Press the green START button (top right of Main Screen). Each station will begin its cycle: requesting product from the weigher, receiving the portioned product, bagging and sealing it, then dropping the finished bag onto the outfeed conveyor. Each station is rated for up to 24 bags per minute (48 bags per minute combined across both stations). Monitor the first several cycles to confirm normal operation on both stations."),
+  stepCard(5, "Start Production", "Press the green START button (top right of Main Screen). Each station will begin its cycle: requesting product from the weigher, receiving the portioned product, bagging and sealing it, then dropping the finished bag onto the outfeed conveyor. Each station is rated for up to 24 bags per minute (24 bags per minute across the station). Monitor the first several cycles to confirm normal operation on the station."),
   spacer(40),
 
   subHeading("3.3 During Normal Operation", "s3-3"),
@@ -940,13 +904,13 @@ const operatingSection = [
 const sensorSection = [
   sectionHeading("5. Sensor Setup & Configuration", "s5"),
   spacer(100),
-  bodyPara("This section covers the setup and configuration of the sensors installed on the FSDWB4 machine. Each subsection identifies the specific sensor and provides wiring, output configuration, and setpoint instructions. Follow the appropriate subsection for the sensor being configured."),
+  bodyPara("This section covers the setup and configuration of the sensors installed on the FSWB4 machine. Each subsection identifies the specific sensor and provides wiring, output configuration, and setpoint instructions. Follow the appropriate subsection for the sensor being configured."),
   spacer(40),
 
   subHeading("5.1 IFM OGD550 – Overview", "s5-1"),
   bodyPara("The IFM OGD550 is an optical distance sensor with two configurable outputs. On this machine, it is configured to detect two distinct distances corresponding to the Jam Sensor and the Bucket Door Sensor. The sensor uses a 4-wire M12 connector."),
   spacer(40),
-  infoBox("ℹ NOTE:", "This sensor is factory-configured for the FSDWB4 machine. Do not change the setpoints or output modes unless instructed by Fox Solutions technical support.", LIGHT_BLUE),
+  infoBox("ℹ NOTE:", "This sensor is factory-configured for the FSWB4 machine. Do not change the setpoints or output modes unless instructed by Fox Solutions technical support.", LIGHT_BLUE),
   spacer(40),
 
   subHeading("5.2 Wiring Connections (M12, 4-Wire)", "s5-2"),
@@ -1050,7 +1014,7 @@ const sensorSection = [
 
   // ── ZSE20B-T Vacuum Sensor ─────────────────────────────────────────────────
   subHeading("5.8 SMC ZSE20B-T – Digital Vacuum Sensor (WB1 & WB2)", "s5-8"),
-  bodyPara("The SMC ZSE20B-T is a digital vacuum pressure switch used to monitor the vacuum level at WB1 and WB2. It features a 3-color, 3-screen LCD display and a PNP switch output for the configured setpoint."),
+  bodyPara("The SMC ZSE20B-T is a digital vacuum pressure switch used to monitor the vacuum level at WB1. It features a 3-color, 3-screen LCD display and a PNP switch output for the configured setpoint."),
   spacer(40),
 
   subHeading("5.8.1 Wiring – ZSE20B-T"),
@@ -1103,7 +1067,7 @@ const sensorSection = [
 
   // ── ISE20A-V Pressure Sensor ───────────────────────────────────────────────
   subHeading("5.9 SMC ISE20A-V – Digital Pressure Sensor (WB1 & WB2)", "s5-9"),
-  bodyPara("The SMC ISE20A-V is a digital pressure switch used to monitor pneumatic pressure at both bagging stations (WB1 and WB2). Three units are installed on the assembly — one for WB1 and two for WB2. Each features a 3-color, 3-screen LCD display and a PNP switch output for the configured setpoint."),
+  bodyPara("The SMC ISE20A-V is a digital pressure switch used to monitor pneumatic pressure at the bagging station (WB1). Three units are installed on the assembly — one for WB1 and two for WB2. Each features a 3-color, 3-screen LCD display and a PNP switch output for the configured setpoint."),
   spacer(40),
 
   subHeading("5.9.1 Wiring – ISE20A-V"),
@@ -1542,7 +1506,7 @@ const doc = new Document({
           children: [
             new Paragraph({
               children: [
-                new TextRun({ text: "Dual Wicketed Bagger (FSDWB4) – User Manual", font: "Arial", size: 18, color: GRAY }),
+                new TextRun({ text: "Single Wicketed Bagger (FSWB4) – User Manual", font: "Arial", size: 18, color: GRAY }),
                 new TextRun({ text: "\tFox Solutions", font: "Arial", size: 18, color: GRAY }),
               ],
               tabStops: [{ type: "right", position: 9360 }],
@@ -1584,7 +1548,7 @@ const doc = new Document({
   ],
 });
 
-const outputPath = "/home/claude/User-Manual/FSDWB4-UM.docx";
+const outputPath = "/home/claude/User-Manual/FSWB4-UM.docx";
 const stream = Packer.toStream(doc);
 const out = fs.createWriteStream(outputPath);
 stream.pipe(out);
