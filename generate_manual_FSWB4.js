@@ -18,7 +18,7 @@ const WHITE       = "FFFFFF";
 // ─── Image helper ─────────────────────────────────────────────────────────────
 const IMG_DIR = "/home/claude/User-Manual/FSWB4_HMI_Screenshots/";
 const LOGO_PATH    = "/home/claude/User-Manual/logo solutions.png";
-const MACHINE_PATH = "/home/claude/User-Manual/dualwb.jpg";
+const MACHINE_PATH = "/home/claude/User-Manual/singlewb.png";
 // Fit ~820x500 HMI images within 6.5" content width at 96 DPI
 const IMG_W = 624;
 const IMG_H = 380;
@@ -260,9 +260,9 @@ const coverPage = [
   new Paragraph({
     alignment: AlignmentType.CENTER,
     children: [new ImageRun({
-      type: "jpg",
+      type: "png",
       data: fs.readFileSync(MACHINE_PATH),
-      transformation: { width: 360, height: 291 },
+      transformation: { width: 243, height: 291 },
       altText: { title: "FSWB4 Single Wicketed Bagger", description: "FSWB4 machine photo", name: "FSWB4_Machine" },
     })],
     spacing: { before: 0, after: 60 },
